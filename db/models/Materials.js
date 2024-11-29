@@ -33,6 +33,10 @@ const MaterialsSchema = {
   alternative: {
     type: DataTypes.INTEGER,
     allowNull: true,
+    references: {
+      model: 'materials',
+      key: 'id',
+    },
   },
 };
 
