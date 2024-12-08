@@ -51,7 +51,7 @@ module.exports = {
       ...(search && {
         search: {
           on: search,
-          searchScope,
+          scope: searchScope,
         },
       }),
       order: {

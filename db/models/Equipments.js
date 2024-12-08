@@ -28,7 +28,7 @@ const EquipmentsSchema = {
     defaultValue: DataTypes.NOW,
     allowNull: true,
     get() {
-      return moment(this.getDataValue('startDate')).utcOffset('+04:00').format('YYYY-MM-DD HH:mm:ss');
+      return moment.utc(this.getDataValue('startDate')).format('YYYY-MM-DD HH:mm:ss');
     },
   },
   expDate: {
@@ -36,7 +36,7 @@ const EquipmentsSchema = {
     type: DataTypes.DATE,
     allowNull: true,
     get() {
-      return moment(this.getDataValue('expDate')).utcOffset('+04:00').format('YYYY-MM-DD HH:mm:ss');
+      return moment.utc(this.getDataValue('expDate')).format('YYYY-MM-DD HH:mm:ss');
     },
   },
 };

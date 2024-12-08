@@ -4,6 +4,7 @@
   "description": "DB connectivity test with express+sequelize",
   "main": "src/server.js",
   "scripts": {
+    "db:init": "node cmd/init.js",
     "dev": "nodemon -r dotenv/config src/server.js",
     "start": "node -r dotenv/config src/server.js",
     "migrate": "cd db && sequelize db:migrate",

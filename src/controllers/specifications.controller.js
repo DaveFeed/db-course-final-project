@@ -1,4 +1,4 @@
-const SpecificationsService = require('../services/materials.service');
+const SpecificationsService = require('../services/specifications.service');
 
 module.exports = {
   create: async (req, res, next) => {
@@ -53,7 +53,7 @@ module.exports = {
       ...(search && {
         search: {
           on: search,
-          searchScope,
+          scope: searchScope,
         },
       }),
       order: {
