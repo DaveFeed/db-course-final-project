@@ -32,4 +32,8 @@ app.use(errorMiddleware);
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server: Listening on port ${PORT}`);
+
+  if (process.send) {
+    process.send('online');
+  }
 });
