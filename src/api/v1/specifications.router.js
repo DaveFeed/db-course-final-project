@@ -106,4 +106,46 @@ Router.delete(
   SpecificationsController.delete,
 );
 
+// 4: GROUP BY
+Router.get(
+  '/quantity',
+  validate(
+    {
+      query: Joi.object({
+        limit: Joi.number().integer().positive().max(100)
+          .default(50),
+        offset: Joi.number().integer().min(0).default(0),
+        search: Joi.string().allow(null, '').optional(),
+      }).default({
+        limit: 50,
+        offset: 0,
+        search: null,
+      }),
+    },
+    validationOptions,
+  ),
+  SpecificationsController.getQuantityUsed,
+);
+
+// 5: SELECT with JOIN
+Router.get(
+  '/metal-based',
+  validate(
+    {
+      query: Joi.object({
+        limit: Joi.number().integer().positive().max(100)
+          .default(50),
+        offset: Joi.number().integer().min(0).default(0),
+        search: Joi.string().allow(null, '').optional(),
+      }).default({
+        limit: 50,
+        offset: 0,
+        search: null,
+      }),
+    },
+    validationOptions,
+  ),
+  SpecificationsController.getMetalSpecifications,
+);
+
 module.exports = Router;

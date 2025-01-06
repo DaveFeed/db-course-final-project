@@ -91,4 +91,57 @@ module.exports = {
       transaction,
     });
   },
+
+  getQuantityUsed: async (options, transaction) => {
+    const {
+      pagination: { limit, offset },
+      search,
+    } = options;
+
+    return SpecificationsModel.findAndCountAll({
+      attributes: [
+        'name',
+        [Sequelize.fn('sum', Sequelize.col('quantity')), 'quantity'],
+      ],
+      group: ['name'],
+      where: {
+        ...(search?.on && {
+          [search.scope]: { [$iLike]: `%${search.on}%` },
+        }),
+      },
+      limit,
+      offset,
+      transaction,
+    });
+  },
+
+  getMetalSpecifications: async (options, transaction) => {
+    const {
+      pagination: { limit, offset },
+      search,
+      order: { on, direction },
+    } = options;
+
+    return SpecificationsModel.findAndCountAll({
+      where: {
+        ...(search?.on && {
+          [search.scope]: { [$iLike]: `%${search.on}%` },
+        }),
+      },
+      include: [
+        {
+          model: MaterialsModel,
+          as: 'material',
+          required: true,
+          where: {
+            type: 'metal',
+          },
+        },
+      ],
+      order: [[on, direction]],
+      limit,
+      offset,
+      transaction,
+    });
+  },
 };
