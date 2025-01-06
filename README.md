@@ -8,8 +8,6 @@ Scope was pre defined by my luck, Manufacturing.
 ## Description
 
 ( this all will be in russian, I didn't bother with translating )
-Remaining steps:
-> 6
 
 ### Дано
 
@@ -45,7 +43,7 @@ Remaining steps:
 — добавить к параметрам запросов в API сортировку выдачи результатов по какому-то из полей
 (For now, queries are placed in queries.sql until i place them in api, but it doesn't make sense given we use ORM and raw query writing skills are not used in that, sorting is supported in crud)
 
-[ ]. (20 баллов) - создать JSON-поле, наполнить его данными, построить над ним pg_trgm + GIN индекс, реализовать полнотекстовый поиск по регулярному выражению из синтаксиса psql в виде REST API запроса
+[x]. (20 баллов) - создать JSON-поле, наполнить его данными, построить над ним pg_trgm + GIN индекс, реализовать полнотекстовый поиск по регулярному выражению из синтаксиса psql в виде REST API запроса
 
 [x]. (10 баллов) - использование ORM (Sequelize is used)
 
