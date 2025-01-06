@@ -5,3 +5,5 @@ class NotFoundError extends Error {
     this.status = status || 404;
   }
 }
+
+module.exports = NotFoundError;

@@ -88,4 +88,48 @@ module.exports = {
       message: 'Success',
     });
   },
+
+  getQuantityUsed: async (req, res, next) => {
+    const { limit, offset, search } = req.query;
+
+    const all = await SpecificationsService.getQuantityUsed({
+      pagination: {
+        limit,
+        offset,
+      },
+      ...(search && {
+        search: {
+          on: search,
+          scope: 'name',
+        },
+      }),
+    });
+
+    res.status(200).json({
+      message: 'Success',
+      result: all,
+    });
+  },
+
+  getMetalSpecifications: async (req, res, next) => {
+    const { limit, offset, search } = req.query;
+
+    const all = await SpecificationsService.getMetalSpecifications({
+      pagination: {
+        limit,
+        offset,
+      },
+      ...(search && {
+        search: {
+          on: search,
+          scope: 'name',
+        },
+      }),
+    });
+
+    res.status(200).json({
+      message: 'Success',
+      result: all,
+    });
+  },
 };

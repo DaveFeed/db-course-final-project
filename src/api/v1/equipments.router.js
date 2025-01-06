@@ -106,4 +106,41 @@ Router.delete(
   EquipmentsController.delete,
 );
 
+// 1: SELECT ... WHERE ...
+Router.get(
+  '/in-use',
+  validate({
+    query: Joi.object({
+      limit: Joi.number().integer().positive().max(100)
+        .default(50),
+      offset: Joi.number().integer().min(0).default(0),
+      search: Joi.string().allow(null, '').optional(),
+      // todo:: (change) could be moved into enum
+      searchScope: Joi.string()
+        .lowercase()
+        .trim()
+        .valid('name', 'manufacturer', 'all')
+        .default('all'),
+      // todo:: (change) could be moved into enum
+      order: Joi.string()
+        .trim()
+        .valid('name', 'manufacturer', 'startDate', 'expDate')
+        .default('startDate'),
+      orderDirection: Joi.string()
+        .lowercase()
+        .trim()
+        .valid('asc', 'desc')
+        .default('asc'),
+    }).default({
+      limit: 50,
+      offset: 0,
+      search: null,
+      searchScope: 'all',
+      order: 'startDate',
+      orderDirection: 'asc',
+    }),
+  }),
+  EquipmentsController.getInUse,
+);
+
 module.exports = Router;

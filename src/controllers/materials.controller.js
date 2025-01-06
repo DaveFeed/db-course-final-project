@@ -88,4 +88,43 @@ module.exports = {
       message: 'Success',
     });
   },
+
+  getNotUsed: async (req, res, next) => {
+    const {
+      limit, offset, search, searchScope, order, orderDirection,
+    } = req.query;
+
+    const notUsed = await MaterialsService.getNotUsed({
+      pagination: {
+        limit,
+        offset,
+      },
+      ...(search && {
+        search: {
+          on: search,
+          scope: searchScope,
+        },
+      }),
+      order: {
+        on: order,
+        direction: orderDirection,
+      },
+    });
+
+    res.status(200).json({
+      message: 'Success',
+      result: notUsed,
+    });
+  },
+
+  setAlternativeByName: async (req, res, next) => {
+    const { type, alternative } = req.body;
+
+    const setAlternative = await MaterialsService.setAlternativeByName(type, alternative);
+
+    res.status(200).json({
+      message: 'Success',
+      result: setAlternative,
+    });
+  },
 };

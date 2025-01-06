@@ -8,10 +8,6 @@ Scope was pre defined by my luck, Manufacturing.
 ## Description
 
 ( this all will be in russian, I didn't bother with translating )
-Remaining steps:
-> 5(half done)
-> 6
-> im not doing UI, no last step
 
 ### Дано
 
@@ -39,7 +35,7 @@ Remaining steps:
 
 [x]. (10 баллов) - создать и добавить хотя бы 2 миграции данных (добавление новых колонок и построение индексов при помощи миграций) (db/migrations/*.js)
 
-[50/50]. (25 баллов) - составить  следующие разновидности запросов, подходящих для вашей темы и реализовать их в виде вызовов REST API (по 5 баллов каждый):
+[x]. (25 баллов) - составить  следующие разновидности запросов, подходящих для вашей темы и реализовать их в виде вызовов REST API (по 5 баллов каждый):
 — SELECT ... WHERE (с несколькими условиями)
 — JOIN
 — UPDATE с нетривиальным условием
@@ -47,7 +43,7 @@ Remaining steps:
 — добавить к параметрам запросов в API сортировку выдачи результатов по какому-то из полей
 (For now, queries are placed in queries.sql until i place them in api, but it doesn't make sense given we use ORM and raw query writing skills are not used in that, sorting is supported in crud)
 
-[ ]. (20 баллов) - создать JSON-поле, наполнить его данными, построить над ним pg_trgm + GIN индекс, реализовать полнотекстовый поиск по регулярному выражению из синтаксиса psql в виде REST API запроса
+[x]. (20 баллов) - создать JSON-поле, наполнить его данными, построить над ним pg_trgm + GIN индекс, реализовать полнотекстовый поиск по регулярному выражению из синтаксиса psql в виде REST API запроса
 
 [x]. (10 баллов) - использование ORM (Sequelize is used)
 

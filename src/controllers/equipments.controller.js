@@ -86,4 +86,32 @@ module.exports = {
       message: 'Success',
     });
   },
+
+  getInUse: async (req, res, next) => {
+    const {
+      limit, offset, search, searchScope, order, orderDirection,
+    } = req.query;
+
+    const inUse = await EquipmentsService.getInUse({
+      pagination: {
+        limit,
+        offset,
+      },
+      ...(search && {
+        search: {
+          on: search,
+          scope: searchScope,
+        },
+      }),
+      order: {
+        on: order,
+        direction: orderDirection,
+      },
+    });
+
+    res.status(200).json({
+      message: 'Success',
+      result: inUse,
+    });
+  },
 };
