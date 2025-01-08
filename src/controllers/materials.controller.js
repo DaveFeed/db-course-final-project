@@ -120,11 +120,22 @@ module.exports = {
   setAlternativeByName: async (req, res, next) => {
     const { type, alternative } = req.body;
 
-    const setAlternative = await MaterialsService.setAlternativeByName(type, alternative);
+    try {
+      const setAlternative = await MaterialsService.setAlternativeByName(
+        type,
+        alternative,
+      );
 
-    res.status(200).json({
-      message: 'Success',
-      result: setAlternative,
-    });
+      res.status(200).json({
+        message: 'Success',
+        result: setAlternative,
+      });
+    } catch (error) {
+      // i cant be bothered with adding the error handling for overall project right now, it throws unhandled promise rejection but whatever)
+      res.status(400).json({
+        message: 'Error',
+        result: error,
+      });
+    }
   },
 };

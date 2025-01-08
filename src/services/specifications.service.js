@@ -98,7 +98,18 @@ module.exports = {
       search,
     } = options;
 
-    return SpecificationsModel.findAndCountAll({
+    const count = await SpecificationsModel.count({
+      where: {
+        ...(search?.on && {
+          [search.scope]: { [$iLike]: `%${search.on}%` },
+        }),
+      },
+      transaction,
+      distinct: true,
+      col: 'name',
+    });
+
+    const rows = await SpecificationsModel.findAll({
       attributes: [
         'name',
         [Sequelize.fn('sum', Sequelize.col('quantity')), 'quantity'],
@@ -113,13 +124,14 @@ module.exports = {
       offset,
       transaction,
     });
+
+    return { count, rows };
   },
 
   getMetalSpecifications: async (options, transaction) => {
     const {
       pagination: { limit, offset },
       search,
-      order: { on, direction },
     } = options;
 
     return SpecificationsModel.findAndCountAll({
@@ -134,11 +146,10 @@ module.exports = {
           as: 'material',
           required: true,
           where: {
-            type: 'metal',
+            type: 'Metal',
           },
         },
       ],
-      order: [[on, direction]],
       limit,
       offset,
       transaction,

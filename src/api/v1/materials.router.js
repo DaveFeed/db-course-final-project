@@ -3,6 +3,62 @@ const { validate, Joi } = require('express-validation');
 const MaterialsController = require('../../controllers/materials.controller');
 const { validationOptions } = require('../../utils/defaults');
 
+// 2: JOIN
+Router.get(
+  '/not-used',
+  validate(
+    {
+      query: Joi.object({
+        limit: Joi.number().integer().positive().max(100)
+          .default(50),
+        offset: Joi.number().integer().min(0).default(0),
+        search: Joi.string().allow(null, '').optional(),
+        // todo:: (change) could be moved into enum
+        searchScope: Joi.string()
+          .lowercase()
+          .trim()
+          .valid('name')
+          .default('name'),
+        // todo:: (change) could be moved into enum
+        order: Joi.string()
+          .trim()
+          .valid('name', 'type', 'price', 'measurementUnit')
+          .default('name'),
+        orderDirection: Joi.string()
+          .lowercase()
+          .trim()
+          .valid('asc', 'desc')
+          .default('asc'),
+      }).default({
+        limit: 50,
+        offset: 0,
+        search: null,
+        searchScope: 'all',
+        order: 'startDate',
+        orderDirection: 'asc',
+      }),
+    },
+    validationOptions,
+  ),
+  MaterialsController.getNotUsed,
+);
+
+// 3: UPDATE (with non trivial WHERE clause)
+// sets alternative by name for provided type
+Router.put(
+  '/alternative-by-name',
+  validate(
+    {
+      body: Joi.object({
+        type: Joi.string().trim().required(),
+        alternative: Joi.string().trim().required(),
+      }),
+    },
+    validationOptions,
+  ),
+  MaterialsController.setAlternativeByName,
+);
+
 // Basic CRUD
 Router.post(
   '/',
@@ -106,62 +162,6 @@ Router.delete(
     validationOptions,
   ),
   MaterialsController.delete,
-);
-
-// 2: JOIN
-Router.get(
-  '/not-used',
-  validate(
-    {
-      query: Joi.object({
-        limit: Joi.number().integer().positive().max(100)
-          .default(50),
-        offset: Joi.number().integer().min(0).default(0),
-        search: Joi.string().allow(null, '').optional(),
-        // todo:: (change) could be moved into enum
-        searchScope: Joi.string()
-          .lowercase()
-          .trim()
-          .valid('name')
-          .default('name'),
-        // todo:: (change) could be moved into enum
-        order: Joi.string()
-          .trim()
-          .valid('name', 'type', 'price', 'measurementUnit')
-          .default('name'),
-        orderDirection: Joi.string()
-          .lowercase()
-          .trim()
-          .valid('asc', 'desc')
-          .default('asc'),
-      }).default({
-        limit: 50,
-        offset: 0,
-        search: null,
-        searchScope: 'all',
-        order: 'startDate',
-        orderDirection: 'asc',
-      }),
-    },
-    validationOptions,
-  ),
-  MaterialsController.getNotUsed,
-);
-
-// 3: UPDATE (with non trivial WHERE clause)
-// sets alternative by name for provided type
-Router.put(
-  '/alternative-by-name',
-  validate(
-    {
-      body: Joi.object({
-        type: Joi.string().trim().required(),
-        alternative: Joi.string().trim().required(),
-      }),
-    },
-    validationOptions,
-  ),
-  MaterialsController.setAlternativeByName,
 );
 
 module.exports = Router;

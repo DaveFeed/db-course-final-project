@@ -18,13 +18,14 @@ Router.get(
     // Not secure to allow user input as regex search but :shrug: :)
     const { search } = req.query;
 
-    const result = await JsonTestModel.findAll({
-      where: {
-        name: {
-          [Sequelize.Op.iRegexp]: search,
-        },
+    // Couldn't get to trigger the index on the jsonb column
+    const result = await JsonTestModel.sequelize.query(
+      'SELECT * FROM json_test WHERE CAST("data" AS TEXT) ~* :search',
+      {
+        replacements: { search },
+        type: Sequelize.QueryTypes.SELECT,
       },
-    });
+    );
 
     res.status(200).json({
       message: 'Success',

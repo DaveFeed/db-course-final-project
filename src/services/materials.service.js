@@ -2,6 +2,7 @@ const {
   Materials: MaterialsModel,
   Specifications: SpecificationsModel,
   Sequelize,
+  sequelize,
 } = require('../../db');
 const { NotFoundError } = require('../utils/errors');
 
@@ -93,27 +94,46 @@ module.exports = {
       search,
       order: { on, direction },
     } = options;
+    // orm failed doing left exclusion join
 
-    return MaterialsModel.findAndCountAll({
-      where: {
-        ...(search?.on && {
-          [search.scope]: { [$iLike]: `%${search.on}%` },
-        }),
-        // todo:: (test) check if this is correct
-        '$specifications.id$': null,
-      },
-      include: [
-        {
-          model: SpecificationsModel,
-          as: 'specifications',
-          required: false,
-        },
-      ],
-      order: [[on, direction]],
+    const query = `
+      SELECT m.*
+      FROM materials m
+      LEFT JOIN specifications s ON m.id = s.material_id
+      WHERE s.material_id IS NULL
+      ${search?.on ? `AND m."${search.scope}" ILIKE :search` : ''}
+      ORDER BY m."${on}" ${direction}
+      LIMIT :limit OFFSET :offset
+    `;
+
+    const countQuery = `
+      SELECT COUNT(*) AS total_count
+      FROM materials m
+      LEFT JOIN specifications s ON m.id = s.material_id
+      WHERE s.material_id IS NULL
+      ${search?.on ? `AND m."${search.scope}" ILIKE :search` : ''}
+    `;
+
+    const replacements = {
       limit,
       offset,
+      ...(search?.on && { search: `%${search.on}%` }),
+    };
+
+    const [results] = await sequelize.query(query, {
+      replacements,
       transaction,
     });
+
+    const [countResult] = await sequelize.query(countQuery, {
+      replacements,
+      transaction,
+    });
+
+    return {
+      rows: results,
+      count: parseInt(countResult[0].total_count, 10),
+    };
   },
 
   setAlternativeByName: async (type, alternative, transaction) => {
